@@ -9,6 +9,7 @@ public class SwiftStudioPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    result("iOS " + UIDevice.current.systemVersion)
+    // todo: Add plugin methods here
+    result(FlutterMethodNotImplemented)
   }
 }
