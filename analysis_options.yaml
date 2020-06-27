@@ -1,0 +1,15 @@
+include: analysis_options.1.9.0.yaml
+analyzer:
+  exclude:
+    - "lib/*.g.dart"
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+  errors:
+    # Otherwise cause the import of all_lint_rules to warn because of some rules conflicts.
+    # We explicitly enabled even conflicting rules and are fixing the conflict
+    # in this file
+    included_file_warning: ignore
+linter:
+  rules:
+    prefer_relative_imports: true
