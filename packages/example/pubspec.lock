@@ -124,7 +124,7 @@ packages:
   studio:
     dependency: "direct main"
     description:
-      path: ".."
+      path: "../studio"
       relative: true
     source: path
     version: "0.0.1"
