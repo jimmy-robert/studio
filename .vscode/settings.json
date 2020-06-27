@@ -1,0 +1,14 @@
+{
+  "files.exclude": {
+    "**/.history": true,
+    "**/.dart_tool": true,
+    "**/.idea": true,
+    "**/*.iml": true,
+    "**/.packages": true,
+    "**/.metadata": true,
+    "**/pubspec.lock": true,
+    "**/.flutter-plugins": true,
+    "**/.flutter-plugins-dependencies": true,
+    "**/build": true
+  }
+}
