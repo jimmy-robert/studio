@@ -10,5 +10,12 @@
     "**/.flutter-plugins": true,
     "**/.flutter-plugins-dependencies": true,
     "**/build": true
-  }
+  },
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.rulers": [
+        120
+    ],
+  },
+  "dart.lineLength": 120
 }
