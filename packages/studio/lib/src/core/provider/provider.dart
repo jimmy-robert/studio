@@ -20,13 +20,24 @@ class Provider<T> extends StatelessWidget {
 
   const Provider.factory(this.create, {this.lazy, this.child}) : factory = true;
 
+  const factory Provider.withContext(
+    T Function(BuildContext context) create, {
+    bool lazy,
+    Widget child,
+  }) = _ProviderWithContext<T>;
+
   const factory Provider.value(T value, {Widget child}) = _ProviderValue<T>;
 
   @override
   Widget build(BuildContext context) {
     return provider.Provider<_Provider<T>>(
       create: (context) {
-        final _provider = _Provider<T>(context: context, create: create, lazy: lazy, factory: factory);
+        final _provider = _Provider<T>(
+          context: context,
+          create: create,
+          lazy: lazy,
+          factory: factory,
+        );
         if (!factory) {
           final value = _provider.value = _provider.create();
 
@@ -57,16 +68,61 @@ class Provider<T> extends StatelessWidget {
 class _ProviderValue<T> extends Provider<T> {
   final T value;
 
-  const _ProviderValue(this.value, {Widget child}) : super._(null, child: child);
+  const _ProviderValue(this.value, {Widget child}) : super._(null, factory: false, lazy: false, child: child);
 
   @override
   Widget build(BuildContext context) {
-    return provider.Provider<T>.value(value: value, child: child);
+    final _provider = _Provider<T>(create: null, context: null, factory: false, lazy: false);
+    _provider.value = value;
+    return provider.Provider<_Provider<T>>.value(value: _provider, child: child);
   }
 
   @override
   Provider<T> copyWith(Widget child) {
     return _ProviderValue<T>(value, child: child);
+  }
+}
+
+class _ProviderWithContext<T> extends Provider<T> {
+  final T Function(BuildContext context) contextCreate;
+
+  const _ProviderWithContext(this.contextCreate, {bool lazy, Widget child})
+      : super._(null, factory: false, lazy: lazy, child: child);
+
+  @override
+  Widget build(BuildContext context) {
+    return provider.Provider<_Provider<T>>(
+      create: (context) {
+        final _provider = _Provider<T>(
+          context: context,
+          create: () => contextCreate(context),
+          lazy: lazy,
+          factory: false,
+        );
+
+        final value = _provider.value = contextCreate(context);
+        if (value is Proxy) value.resolver = _ContextResolver(context);
+        if (value is Lifecycle) value.onCreate();
+
+        return _provider;
+      },
+      dispose: (context, provider) {
+        final value = provider.value;
+
+        if (value is Lifecycle) value.onDispose();
+        if (value is Proxy) value.resolver = null;
+
+        provider.value = null;
+        provider.context = null;
+      },
+      lazy: lazy,
+      child: child,
+    );
+  }
+
+  @override
+  Provider<T> copyWith(Widget child) {
+    return _ProviderWithContext(contextCreate, lazy: lazy, child: child);
   }
 }
 
