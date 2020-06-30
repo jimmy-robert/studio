@@ -27,3 +27,7 @@ class ModuleWidget extends StatelessWidget {
     return child;
   }
 }
+
+extension ContextModuleExtension on BuildContext {
+  Module get module => get<Module>();
+}
