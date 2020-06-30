@@ -1,4 +1,4 @@
 mixin Lifecycle {
-  void onCreate();
-  void onDispose();
+  void onCreate() {}
+  void onDispose() {}
 }
