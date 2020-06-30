@@ -1,33 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart' as provider;
 
-import 'provided.dart';
-import 'resolver.dart';
+import '../lifecycle/lifecycle.dart';
+import '../resolver/proxy.dart';
+import '../resolver/resolver.dart';
 
-class Provider<T extends Provided> extends StatelessWidget {
+class Provider<T> extends StatelessWidget {
   final T Function() create;
 
   final Widget child;
 
   final bool lazy;
 
-  const Provider(this.create, {this.lazy, this.child}) : assert(create != null);
+  final bool factory;
 
-  const factory Provider.value({T value, Widget child}) = _ProviderValue;
+  const Provider._(this.create, {this.lazy, this.factory, this.child});
+
+  const Provider(this.create, {this.lazy, this.child}) : factory = false;
+
+  const Provider.factory(this.create, {this.lazy, this.child}) : factory = true;
+
+  const factory Provider.value(T value, {Widget child}) = _ProviderValue<T>;
 
   @override
   Widget build(BuildContext context) {
-    return provider.Provider<T>(
+    return provider.Provider<_Provider<T>>(
       create: (context) {
-        final value = create();
-        return value
-          ..resolver = _ContextResolver(context)
-          ..onCreate();
+        final _provider = _Provider<T>(context: context, create: create, lazy: lazy, factory: factory);
+        if (!factory) {
+          final value = _provider.value = _provider.create();
+
+          if (value is Proxy) value.resolver = _ContextResolver(context);
+          if (value is Lifecycle) value.onCreate();
+        }
+        return _provider;
       },
-      dispose: (context, value) {
-        value
-          ..onDispose()
-          ..resolver = null;
+      dispose: (context, provider) {
+        final value = provider.value;
+
+        if (value is Lifecycle) value.onDispose();
+        if (value is Proxy) value.resolver = null;
+
+        provider.value = null;
+        provider.context = null;
       },
       lazy: lazy,
       child: child,
@@ -35,14 +50,14 @@ class Provider<T extends Provided> extends StatelessWidget {
   }
 
   Provider<T> copyWith(Widget child) {
-    return Provider<T>(create, lazy: lazy, child: child);
+    return Provider<T>._(create, lazy: lazy, factory: factory, child: child);
   }
 }
 
-class _ProviderValue<T extends Provided> extends Provider<T> {
+class _ProviderValue<T> extends Provider<T> {
   final T value;
 
-  const _ProviderValue({this.value, Widget child}) : super(null, child: child);
+  const _ProviderValue(this.value, {Widget child}) : super._(null, child: child);
 
   @override
   Widget build(BuildContext context) {
@@ -51,22 +66,48 @@ class _ProviderValue<T extends Provided> extends Provider<T> {
 
   @override
   Provider<T> copyWith(Widget child) {
-    return _ProviderValue<T>(value: value, child: child);
+    return _ProviderValue<T>(value, child: child);
   }
 }
 
-class _ContextResolver extends Resolver {
-  final BuildContext context;
+class _Provider<T> {
+  BuildContext context;
 
-  _ContextResolver(this.context);
+  T value;
 
-  @override
-  T resolve<T extends Provided>({bool allowNull = true}) {
+  final T Function() create;
+
+  final bool lazy;
+
+  final bool factory;
+
+  _Provider({this.context, this.create, this.lazy, this.factory});
+}
+
+extension ContextProviderExtension on BuildContext {
+  T get<T>({bool allowNull = true}) {
     try {
-      return provider.Provider.of<T>(context, listen: false);
+      final _provider = provider.Provider.of<_Provider<T>>(this, listen: false);
+
+      // Single instance
+      if (!_provider.factory) return _provider.value;
+
+      // Factory
+      final value = _provider.create();
+      if (value is Lifecycle) value.onCreate();
+
+      return value;
     } on provider.ProviderNotFoundException {
-      if (!allowNull) rethrow;
-      return null;
+      if (allowNull) return null;
+      rethrow;
     }
   }
+}
+
+class _ContextResolver with Resolver {
+  final BuildContext context;
+  const _ContextResolver(this.context);
+
+  @override
+  T get<T>({bool allowNull = true}) => context.get(allowNull: allowNull);
 }
