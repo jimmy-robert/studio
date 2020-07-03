@@ -16,6 +16,7 @@ dependencies:
   mobx: ^1.2.1+1
   flutter_mobx: ^1.1.0+1
   material_design_icons_flutter: ^4.0.5345
+  circular_reveal_animation: ^1.1.5
 
 dev_dependencies:
   flutter_test:
