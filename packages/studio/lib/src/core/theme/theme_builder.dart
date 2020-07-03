@@ -6,10 +6,18 @@ import 'theme_mode_controller.dart';
 
 class ThemeBuilder extends StatelessWidget {
   final ThemeData Function(ThemeData theme) light;
+
   final ThemeData Function(ThemeData theme) dark;
+
   final Widget child;
 
   const ThemeBuilder({this.light, this.dark, this.child});
+
+  const ThemeBuilder.all({
+    @required ThemeData Function(ThemeData theme) builder,
+    @required this.child,
+  })  : light = builder,
+        dark = builder;
 
   @override
   Widget build(BuildContext context) {
