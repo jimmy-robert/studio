@@ -4,7 +4,6 @@ import '../../widgets/init_widget.dart';
 import '../../widgets/wrapper.dart';
 import '../provider/module.dart';
 import '../provider/provider.dart';
-import '../reactive/observer.dart';
 import '../theme/theme_builder.dart';
 import '../theme/theme_mode_controller.dart';
 import 'app_controller.dart';
@@ -56,20 +55,15 @@ class _AppState extends State<App> {
                       ..addModule(context.get<Module>()),
                     child: InitWidget(
                       onInit: widget.onReady,
-                      child: Observer.withContext(
-                        (context) {
-                          // todo wrap with Studio Trojan
-                          return MaterialApp(
-                            debugShowCheckedModeBanner: false,
-                            navigatorKey: context.get<AppController>().navigatorKey,
-                            initialRoute: '/',
-                            routes: {'/': widget.build},
-                            builder: (context, child) {
-                              child = ThemeBuilder(child: child);
-                              child = Wrapper(builder: widget.wrapApp, child: child);
-                              return child;
-                            },
-                          );
+                      child: MaterialApp(
+                        debugShowCheckedModeBanner: false,
+                        navigatorKey: context.get<AppController>().navigatorKey,
+                        initialRoute: '/',
+                        routes: {'/': widget.build},
+                        builder: (context, child) {
+                          child = ThemeBuilder(child: child);
+                          child = Wrapper(builder: widget.wrapApp, child: child);
+                          return child;
                         },
                       ),
                     ),

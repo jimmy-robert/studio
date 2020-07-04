@@ -1,15 +1,12 @@
-import 'package:circular_reveal_animation/circular_reveal_animation.dart';
 import 'package:flutter/material.dart';
 
-import '../../utils/duration.dart';
+import '../../widgets/rerun_widget.dart';
 import '../provider/provider.dart';
 
 mixin AppController {
-  final navigatorKey = GlobalKey<NavigatorState>();
+  GlobalKey<NavigatorState> get navigatorKey;
 
-  void restart() {
-    navigatorKey.currentState.pushNamedAndRemoveUntil('/', (route) => false);
-  }
+  void restart();
 
   void rerun();
 }
@@ -24,60 +21,30 @@ class AppControllerWidget extends StatefulWidget {
 }
 
 class _AppControllerWidgetState extends State<AppControllerWidget> with AppController, SingleTickerProviderStateMixin {
+  @override
+  final navigatorKey = GlobalKey<NavigatorState>();
+
   var _session = DateTime.now();
   DateTime get session => _session;
 
-  var _empty = false;
-
-  AnimationController _circularRevealController;
-
-  @override
-  void initState() {
-    super.initState();
-    _circularRevealController = AnimationController(
-      value: 1,
-      vsync: this,
-      duration: 250.milliseconds,
-    );
-  }
-
-  @override
-  void dispose() {
-    _circularRevealController.dispose();
-    super.dispose();
-  }
+  final _rerunKey = GlobalKey<RerunWidgetState>();
 
   @override
   Widget build(BuildContext context) {
-    if (_empty) return Container(color: Colors.black);
-
-    return Container(
-      color: Colors.black,
-      child: CircularRevealAnimation(
-        animation: _circularRevealController,
-        child: Provider<AppController>.value(this, child: widget.child),
-      ),
+    return RerunWidget(
+      key: _rerunKey,
+      child: Provider<AppController>.value(this, child: widget.child),
     );
   }
 
   @override
-  void rerun() async {
-    final duration = 100.milliseconds;
-
-    await _circularRevealController.reverse();
-
-    setState(() {
-      _empty = true;
-    });
-    await Future<void>.delayed(duration);
-
+  void rerun() {
     _session = DateTime.now();
+    _rerunKey.currentState.rerun();
+  }
 
-    setState(() {
-      _empty = false;
-    });
-    await Future<void>.delayed(duration);
-
-    await _circularRevealController.forward();
+  @override
+  void restart() {
+    navigatorKey.currentState.pushNamedAndRemoveUntil('/', (route) => false);
   }
 }
