@@ -6,6 +6,7 @@ import '../provider/provider.dart';
 import 'studio_app/studio_app_bar.dart';
 import 'studio_body.dart';
 import 'studio_controller.dart';
+import 'studio_trojan.dart';
 
 mixin Studio on App {
   @override
@@ -39,6 +40,7 @@ mixin Studio on App {
   @override
   Widget wrapApp(BuildContext context, Widget child) {
     child = super.wrapApp(context, child);
-    return child;
+    final controller = context.get<StudioController>();
+    return StudioTrojan(key: controller.trojanKey, child: child);
   }
 }

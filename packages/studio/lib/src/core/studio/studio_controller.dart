@@ -1,8 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../utils/duration.dart';
+import 'studio_trojan.dart';
 
 class StudioController {
+  final trojanKey = GlobalKey<StudioTrojanState>();
+
+  BuildContext get appContext => trojanKey.currentContext;
+
   final _selectedIndex = Observable(0);
   int get selectedIndex => _selectedIndex.value;
   set selectedIndex(int value) => runInAction(() => _selectedIndex.value = value);

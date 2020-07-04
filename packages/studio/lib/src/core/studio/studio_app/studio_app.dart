@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../../utils/duration.dart';
+import '../../app/app_controller.dart';
 import '../../provider/provider.dart';
 import '../../reactive/actions.dart';
 import '../../reactive/observer.dart';
@@ -131,14 +132,9 @@ class StudioAppMenu extends StatelessWidget {
                     maxLines: 1,
                   ),
                   onTap: () {
-                    final route = MaterialPageRoute<void>(builder: (context) {
-                      return Scaffold(
-                        appBar: AppBar(
-                          title: Text('Hello'),
-                        ),
-                      );
-                    });
-                    Navigator.of(context).push(route);
+                    final appContext = context.get<StudioController>().appContext;
+                    final controller = appContext.get<AppController>();
+                    controller.restart();
                   },
                 ),
                 Divider(height: 0),
@@ -146,7 +142,11 @@ class StudioAppMenu extends StatelessWidget {
                   leading: Icon(MdiIcons.restartAlert),
                   title: Text('Rerun'),
                   subtitle: Text('Hard reboot app from the start', maxLines: 1),
-                  onTap: () {},
+                  onTap: () {
+                    final appContext = context.get<StudioController>().appContext;
+                    final controller = appContext.get<AppController>();
+                    controller.rerun();
+                  },
                 ),
                 Divider(height: 0),
                 Container(
