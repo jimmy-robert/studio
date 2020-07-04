@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mobx/mobx.dart';
 
+import '../../../../widgets/tile_switch.dart';
 import '../../../../widgets/value_selector.dart';
 import '../../../provider/provider.dart';
 import '../../../reactive/observer.dart';
@@ -20,23 +21,14 @@ class BrightnessTile extends StatelessWidget {
       leading: Icon(MdiIcons.themeLightDark),
       title: Text('Brightness'),
       subtitle: Observer(() => Text(controller.brightness.value == Brightness.light ? 'Light' : 'Dark')),
-      trailing: InkWell(
-        excludeFromSemantics: true,
-        canRequestFocus: false,
-        hoverColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        focusColor: Colors.transparent,
-        onTap: () {},
-        child: Observer(() {
-          return Switch(
-            value: controller.enabled.value,
-            onChanged: (value) {
-              runInAction(() => controller.enabled.value = value);
-            },
-          );
-        }),
-      ),
+      trailing: Observer(() {
+        return TileSwitch(
+          value: controller.enabled.value,
+          onChanged: (value) {
+            runInAction(() => controller.enabled.value = value);
+          },
+        );
+      }),
       onTap: () async {
         final route = MaterialPageRoute<Brightness>(builder: (context) {
           return ValueSelector<Brightness>(

@@ -5,6 +5,7 @@ import '../../../widgets/separated_list.dart';
 import 'studio_app_features/brightness.dart';
 import 'studio_app_features/rerun.dart';
 import 'studio_app_features/restart.dart';
+import 'studio_app_features/text_scale_factor.dart';
 import 'studio_app_features/time_dilation.dart';
 
 class StudioAppMenu extends StatelessWidget {
@@ -75,34 +76,7 @@ class StudioAppMenu extends StatelessWidget {
                   ),
                   onTap: () {},
                 ),
-                ListTile(
-                  leading: Icon(MdiIcons.formatSize),
-                  title: Text('Text scale factor'),
-                  subtitle: Text('1x'),
-                  trailing: Builder(
-                    builder: (context) {
-                      var selected = false;
-                      return InkWell(
-                        excludeFromSemantics: true,
-                        canRequestFocus: false,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        onTap: () {},
-                        child: StatefulBuilder(
-                          builder: (context, setState) => Switch(
-                            value: selected,
-                            onChanged: (value) {
-                              setState(() => selected = value);
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  onTap: () {},
-                ),
+                TextScaleFactorTile(),
                 BrightnessTile(),
                 ListTile(
                   leading: Icon(Icons.format_bold),

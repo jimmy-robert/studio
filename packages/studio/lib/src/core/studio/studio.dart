@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:studio/src/core/provider/module.dart';
-import 'package:studio/src/core/studio/studio_app/studio_app_features/brightness.dart';
 
 import '../../widgets/rerun_widget.dart';
 import '../app/app.dart';
+import '../provider/module.dart';
 import '../provider/provider.dart';
 import 'studio_app/studio_app_bar.dart';
+import 'studio_app/studio_app_features/brightness.dart';
+import 'studio_app/studio_app_features/text_scale_factor.dart';
 import 'studio_body.dart';
 import 'studio_controller.dart';
 import 'studio_trojan.dart';
@@ -18,7 +19,8 @@ mixin Studio on App {
       child: ModuleWidget(
         module: Module() //
           ..add(Provider(() => StudioController()))
-          ..add(Provider(() => BrightnessController())),
+          ..add(Provider(() => BrightnessController()))
+          ..add(Provider(() => TextScaleFactorController())),
         child: Directionality(
           textDirection: TextDirection.ltr,
           child: Stack(
@@ -46,6 +48,7 @@ mixin Studio on App {
     child = super.wrapApp(context, child);
     final controller = context.get<StudioController>();
     child = BrightnessWrapper(child: child);
+    child = TextScaleFactorWrapper(child: child);
     return StudioTrojan(key: controller.trojanKey, child: child);
   }
 }
