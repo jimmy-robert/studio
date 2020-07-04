@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../../widgets/separated_list.dart';
+import 'studio_app_features/bold_text.dart';
 import 'studio_app_features/brightness.dart';
 import 'studio_app_features/rerun.dart';
 import 'studio_app_features/restart.dart';
@@ -78,33 +79,7 @@ class StudioAppMenu extends StatelessWidget {
                 ),
                 TextScaleFactorTile(),
                 BrightnessTile(),
-                ListTile(
-                  leading: Icon(Icons.format_bold),
-                  title: Text('Bold texts'),
-                  trailing: Builder(
-                    builder: (context) {
-                      var selected = false;
-                      return InkWell(
-                        excludeFromSemantics: true,
-                        canRequestFocus: false,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        onTap: () {},
-                        child: StatefulBuilder(
-                          builder: (context, setState) => Switch(
-                            value: selected,
-                            onChanged: (value) {
-                              setState(() => selected = value);
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  onTap: () {},
-                ),
+                BoldTextTile(),
                 ListTile(
                   leading: Icon(MdiIcons.earth),
                   title: Text('Language'),

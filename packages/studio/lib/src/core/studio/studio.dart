@@ -5,6 +5,7 @@ import '../app/app.dart';
 import '../provider/module.dart';
 import '../provider/provider.dart';
 import 'studio_app/studio_app_bar.dart';
+import 'studio_app/studio_app_features/bold_text.dart';
 import 'studio_app/studio_app_features/brightness.dart';
 import 'studio_app/studio_app_features/text_scale_factor.dart';
 import 'studio_body.dart';
@@ -20,7 +21,8 @@ mixin Studio on App {
         module: Module() //
           ..add(Provider(() => StudioController()))
           ..add(Provider(() => BrightnessController()))
-          ..add(Provider(() => TextScaleFactorController())),
+          ..add(Provider(() => TextScaleFactorController()))
+          ..add(Provider(() => BoldTextController())),
         child: Directionality(
           textDirection: TextDirection.ltr,
           child: Stack(
@@ -49,6 +51,7 @@ mixin Studio on App {
     final controller = context.get<StudioController>();
     child = BrightnessWrapper(child: child);
     child = TextScaleFactorWrapper(child: child);
+    child = BoldTextWrapper(child: child);
     return StudioTrojan(key: controller.trojanKey, child: child);
   }
 }
