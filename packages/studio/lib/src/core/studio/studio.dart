@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:studio/src/core/provider/module.dart';
+import 'package:studio/src/core/studio/studio_app/studio_app_features/brightness.dart';
 
 import '../../widgets/rerun_widget.dart';
 import '../app/app.dart';
@@ -13,8 +15,10 @@ mixin Studio on App {
   Widget wrapAppController(BuildContext context, Widget child) {
     child = super.wrapAppController(context, child);
     return RerunWidget(
-      child: Provider(
-        () => StudioController(),
+      child: ModuleWidget(
+        module: Module() //
+          ..add(Provider(() => StudioController()))
+          ..add(Provider(() => BrightnessController())),
         child: Directionality(
           textDirection: TextDirection.ltr,
           child: Stack(
@@ -41,6 +45,7 @@ mixin Studio on App {
   Widget wrapApp(BuildContext context, Widget child) {
     child = super.wrapApp(context, child);
     final controller = context.get<StudioController>();
+    child = BrightnessWrapper(child: child);
     return StudioTrojan(key: controller.trojanKey, child: child);
   }
 }
