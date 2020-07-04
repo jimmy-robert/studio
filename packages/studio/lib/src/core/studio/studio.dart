@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/rerun_widget.dart';
 import '../app/app.dart';
 import '../provider/provider.dart';
-import 'studio_app_bar.dart';
+import 'studio_app/studio_app_bar.dart';
 import 'studio_body.dart';
 import 'studio_controller.dart';
 

@@ -4,11 +4,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../../utils/duration.dart';
-import '../provider/provider.dart';
-import '../reactive/actions.dart';
-import '../reactive/observer.dart';
-import 'studio_controller.dart';
+import '../../../utils/duration.dart';
+import '../../provider/provider.dart';
+import '../../reactive/actions.dart';
+import '../../reactive/observer.dart';
+import '../studio_controller.dart';
 
 class StudioApp extends StatelessWidget {
   final Widget app;

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../provider/provider.dart';
 import '../reactive/observer.dart';
-import 'studio_app.dart';
+import 'studio_app/studio_app.dart';
 import 'studio_controller.dart';
+import 'studio_screens/studio_screens.dart';
+import 'studio_storyboards/studio_storyboards.dart';
 
 class StudioBody extends StatelessWidget {
   final Widget app;
@@ -18,8 +20,8 @@ class StudioBody extends StatelessWidget {
         index: controller.selectedIndex,
         children: [
           StudioApp(app: app),
-          Container(color: Colors.red), // todo Storyboards
-          Container(color: Colors.blue), // todo Screens
+          StudioStoryboards(),
+          StudioScreens(),
         ],
       );
     });
