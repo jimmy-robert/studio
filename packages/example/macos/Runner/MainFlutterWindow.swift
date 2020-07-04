@@ -10,11 +10,12 @@ class MainFlutterWindow: NSWindow {
 
     self.contentMinSize = NSSize(width: 640, height: 480)
     
-    self.titlebarAppearsTransparent = true
-    self.titleVisibility = .hidden
-    self.isMovableByWindowBackground = true
-    self.styleMask.insert(NSWindow.StyleMask.fullSizeContentView)
-
+    let customToolbar = NSToolbar(identifier: "main")
+    titlebarAppearsTransparent = true
+    titleVisibility = .hidden
+    toolbar = customToolbar
+    backgroundColor = .white
+    
     RegisterGeneratedPlugins(registry: flutterViewController)
 
     super.awakeFromNib()
