@@ -38,7 +38,7 @@ class ThemeBuilder extends StatelessWidget {
         theme = dark(theme);
       }
 
-      return AnimatedTheme(
+      return Theme(
         data: theme,
         child: child,
       );
