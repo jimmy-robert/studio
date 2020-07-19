@@ -6,6 +6,7 @@ import 'studio_trojan.dart';
 
 class StudioController {
   final trojanKey = GlobalKey<StudioTrojanState>();
+  final appKey = GlobalKey();
 
   BuildContext get appContext => trojanKey.currentContext;
 

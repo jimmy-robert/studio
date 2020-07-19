@@ -15,15 +15,17 @@ class StudioBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.get<StudioController>();
-    return Observer(() {
-      return IndexedStack(
-        index: controller.selectedIndex,
-        children: [
-          StudioApp(app: app),
-          StudioStoryboards(),
-          StudioScreens(),
-        ],
-      );
-    });
+    return Observer(
+      builder: (context) {
+        return IndexedStack(
+          index: controller.selectedIndex,
+          children: [
+            StudioApp(app: app),
+            StudioStoryboards(),
+            StudioScreens(),
+          ],
+        );
+      },
+    );
   }
 }

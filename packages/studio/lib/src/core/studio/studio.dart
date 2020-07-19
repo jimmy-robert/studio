@@ -7,6 +7,8 @@ import '../provider/provider.dart';
 import 'studio_app/studio_app_bar.dart';
 import 'studio_app/studio_app_features/bold_text.dart';
 import 'studio_app/studio_app_features/brightness.dart';
+import 'studio_app/studio_app_features/device_preview/device_preview_app_wrapper.dart';
+import 'studio_app/studio_app_features/device_preview/device_preview_controller.dart';
 import 'studio_app/studio_app_features/text_scale_factor.dart';
 import 'studio_body.dart';
 import 'studio_controller.dart';
@@ -20,6 +22,7 @@ mixin Studio on App {
       child: ModuleWidget(
         module: Module() //
           ..add(Provider(() => StudioController()))
+          ..add(Provider(() => DevicePreviewController()))
           ..add(Provider(() => BrightnessController()))
           ..add(Provider(() => TextScaleFactorController()))
           ..add(Provider(() => BoldTextController())),
@@ -52,6 +55,7 @@ mixin Studio on App {
     child = BrightnessWrapper(child: child);
     child = TextScaleFactorWrapper(child: child);
     child = BoldTextWrapper(child: child);
+    child = DevicePreviewAppWrapper(child: child);
     return StudioTrojan(key: controller.trojanKey, child: child);
   }
 }

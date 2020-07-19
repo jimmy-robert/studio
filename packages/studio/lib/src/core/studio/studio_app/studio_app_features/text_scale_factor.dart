@@ -19,19 +19,23 @@ class TextScaleFactorTile extends StatelessWidget {
     return ListTile(
       leading: Icon(MdiIcons.formatSize),
       title: Text('Text scale factor'),
-      subtitle: Observer(() {
-        final textScaleFactor = controller.textScaleFactor.value;
-        final value = textScaleFactor % 1 == 0 ? textScaleFactor.round() : textScaleFactor;
-        return Text('${value}x');
-      }),
-      trailing: Observer(() {
-        return TileSwitch(
-          value: controller.enabled.value,
-          onChanged: (value) {
-            runInAction(() => controller.enabled.value = value);
-          },
-        );
-      }),
+      subtitle: Observer(
+        builder: (context) {
+          final textScaleFactor = controller.textScaleFactor.value;
+          final value = textScaleFactor % 1 == 0 ? textScaleFactor.round() : textScaleFactor;
+          return Text('${value}x');
+        },
+      ),
+      trailing: Observer(
+        builder: (context) {
+          return TileSwitch(
+            value: controller.enabled.value,
+            onChanged: (value) {
+              runInAction(() => controller.enabled.value = value);
+            },
+          );
+        },
+      ),
       onTap: () {
         final route = MaterialPageRoute<void>(
           builder: (context) {
@@ -52,47 +56,51 @@ class TextScaleFactorScreen extends StatelessWidget {
       appBar: AppBar(title: Text('Text scale factor')),
       body: SeparatedList(
         children: [
-          Observer(() {
-            final value = controller.textScaleFactor.value;
-            return MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                textScaleFactor: value,
-              ),
-              child: Container(
-                height: 240,
-                color: Colors.black38,
-                padding: const EdgeInsets.all(24),
-                child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: Color(0xFF36414F),
-                    ),
-                    child: ListTile(
-                      leading: Icon(Icons.format_size),
-                      title: Text('This is a preview'),
-                      subtitle: Text('${value % 1 == 0 ? value.round() : value}x'),
+          Observer(
+            builder: (context) {
+              final value = controller.textScaleFactor.value;
+              return MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                  textScaleFactor: value,
+                ),
+                child: Container(
+                  height: 240,
+                  color: Colors.black38,
+                  padding: const EdgeInsets.all(24),
+                  child: Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: Color(0xFF36414F),
+                      ),
+                      child: ListTile(
+                        leading: Icon(Icons.format_size),
+                        title: Text('This is a preview'),
+                        subtitle: Text('${value % 1 == 0 ? value.round() : value}x'),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          }),
+              );
+            },
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            child: Observer(() {
-              return Slider(
-                divisions: 10,
-                value: controller.textScaleFactor.value,
-                min: 0.5,
-                max: 3,
-                activeColor: Colors.teal,
-                label: '${controller.textScaleFactor.value}x',
-                onChanged: (value) {
-                  runInAction(() => controller.textScaleFactor.value = (value * 100).round() / 100);
-                },
-              );
-            }),
+            child: Observer(
+              builder: (context) {
+                return Slider(
+                  divisions: 10,
+                  value: controller.textScaleFactor.value,
+                  min: 0.5,
+                  max: 3,
+                  activeColor: Colors.teal,
+                  label: '${controller.textScaleFactor.value}x',
+                  onChanged: (value) {
+                    runInAction(() => controller.textScaleFactor.value = (value * 100).round() / 100);
+                  },
+                );
+              },
+            ),
           ),
           ListTile(
             title: Text('Small'),
@@ -126,14 +134,16 @@ class TextScaleFactorWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.get<TextScaleFactorController>();
-    return Observer(() {
-      final enabled = controller.enabled.value;
-      if (!enabled) return child;
+    return Observer(
+      builder: (context) {
+        final enabled = controller.enabled.value;
+        if (!enabled) return child;
 
-      return MediaQuery(
-        data: MediaQuery.of(context).copyWith(textScaleFactor: controller.textScaleFactor.value),
-        child: child,
-      );
-    });
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: controller.textScaleFactor.value),
+          child: child,
+        );
+      },
+    );
   }
 }

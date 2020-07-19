@@ -20,15 +20,19 @@ class BrightnessTile extends StatelessWidget {
     return ListTile(
       leading: Icon(MdiIcons.themeLightDark),
       title: Text('Brightness'),
-      subtitle: Observer(() => Text(controller.brightness.value == Brightness.light ? 'Light' : 'Dark')),
-      trailing: Observer(() {
-        return TileSwitch(
-          value: controller.enabled.value,
-          onChanged: (value) {
-            runInAction(() => controller.enabled.value = value);
-          },
-        );
-      }),
+      subtitle: Observer(
+        builder: (context) => Text(controller.brightness.value == Brightness.light ? 'Light' : 'Dark'),
+      ),
+      trailing: Observer(
+        builder: (context) {
+          return TileSwitch(
+            value: controller.enabled.value,
+            onChanged: (value) {
+              runInAction(() => controller.enabled.value = value);
+            },
+          );
+        },
+      ),
       onTap: () async {
         final route = MaterialPageRoute<Brightness>(builder: (context) {
           return ValueSelector<Brightness>(
@@ -54,14 +58,16 @@ class BrightnessWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.get<BrightnessController>();
-    return Observer(() {
-      final enabled = controller.enabled.value;
-      if (!enabled) return child;
+    return Observer(
+      builder: (context) {
+        final enabled = controller.enabled.value;
+        if (!enabled) return child;
 
-      return MediaQuery(
-        data: MediaQuery.of(context).copyWith(platformBrightness: controller.brightness.value),
-        child: child,
-      );
-    });
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(platformBrightness: controller.brightness.value),
+          child: child,
+        );
+      },
+    );
   }
 }

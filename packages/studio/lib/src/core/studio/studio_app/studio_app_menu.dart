@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../../../widgets/separated_list.dart';
 import 'studio_app_features/bold_text.dart';
 import 'studio_app_features/brightness.dart';
+import 'studio_app_features/device_preview/device_preview_tile.dart';
 import 'studio_app_features/rerun.dart';
 import 'studio_app_features/restart.dart';
 import 'studio_app_features/text_scale_factor.dart';
@@ -26,6 +27,8 @@ class StudioAppMenu extends StatelessWidget {
           centerTitle: false,
           elevation: 2,
         ),
+        textSelectionColor: Colors.white38,
+        cursorColor: Colors.white,
         dividerTheme: darkTheme.dividerTheme.copyWith(space: 0),
       ),
       home: Builder(
@@ -49,34 +52,7 @@ class StudioAppMenu extends StatelessWidget {
                   height: 24,
                   color: Colors.white.withOpacity(0.015),
                 ),
-                ListTile(
-                  leading: Icon(MdiIcons.tabletCellphone),
-                  title: Text('Device preview'),
-                  subtitle: Text('iPhone 11 Pro Max'),
-                  trailing: Builder(
-                    builder: (context) {
-                      var selected = false;
-                      return InkWell(
-                        excludeFromSemantics: true,
-                        canRequestFocus: false,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        onTap: () {},
-                        child: StatefulBuilder(
-                          builder: (context, setState) => Switch(
-                            value: selected,
-                            onChanged: (value) {
-                              setState(() => selected = value);
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  onTap: () {},
-                ),
+                DevicePreviewTile(),
                 TextScaleFactorTile(),
                 BrightnessTile(),
                 BoldTextTile(),

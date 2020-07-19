@@ -21,27 +21,29 @@ class ThemeBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Observer.withContext((context) {
-      var mode = context.get<ThemeModeController>()?.mode?.value;
+    return Observer(
+      builder: (context) {
+        var mode = context.get<ThemeModeController>()?.mode?.value;
 
-      if (mode == null || mode == ThemeMode.system) {
-        final brightness = MediaQuery.platformBrightnessOf(context);
-        mode = brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
-      }
+        if (mode == null || mode == ThemeMode.system) {
+          final brightness = MediaQuery.platformBrightnessOf(context);
+          mode = brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
+        }
 
-      var theme = Theme.of(context, shadowThemeOnly: true);
-      theme ??= mode == ThemeMode.light ? ThemeData.light() : ThemeData.dark();
+        var theme = Theme.of(context);
+        theme ??= mode == ThemeMode.light ? ThemeData.light() : ThemeData.dark();
 
-      if (mode == ThemeMode.light && light != null) {
-        theme = light(theme);
-      } else if (mode == ThemeMode.dark && dark != null) {
-        theme = dark(theme);
-      }
+        if (mode == ThemeMode.light && light != null) {
+          theme = light(theme);
+        } else if (mode == ThemeMode.dark && dark != null) {
+          theme = dark(theme);
+        }
 
-      return Theme(
-        data: theme,
-        child: child,
-      );
-    });
+        return Theme(
+          data: theme,
+          child: child,
+        );
+      },
+    );
   }
 }

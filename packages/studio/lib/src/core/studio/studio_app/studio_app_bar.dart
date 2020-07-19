@@ -17,22 +17,24 @@ class StudioAppBar extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(width: 12),
-          Observer(() {
-            final controller = context.get<StudioController>();
-            final index = controller.selectedIndex;
+          Observer(
+            builder: (context) {
+              final controller = context.get<StudioController>();
+              final index = controller.selectedIndex;
 
-            if (index != 0) return Container();
+              if (index != 0) return Container();
 
-            return IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                runInAction(() {
-                  controller.animationDuration = 200.milliseconds;
-                  controller.appMenuOpen = !controller.appMenuOpen;
-                });
-              },
-            );
-          }),
+              return IconButton(
+                icon: Icon(Icons.menu),
+                onPressed: () {
+                  runInAction(() {
+                    controller.animationDuration = 200.milliseconds;
+                    controller.appMenuOpen = !controller.appMenuOpen;
+                  });
+                },
+              );
+            },
+          ),
           Expanded(child: Container()),
           StudioAppBarButton(
             index: 0,
@@ -79,19 +81,21 @@ class StudioAppBarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.get<StudioController>();
-    return Observer(() {
-      final currentIndex = controller.selectedIndex;
-      return FlatButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-        ),
-        textColor: currentIndex == index ? Colors.white : Colors.grey.shade800,
-        color: currentIndex == index ? Colors.blue : Colors.transparent,
-        onPressed: () {
-          controller.selectedIndex = index;
-        },
-        child: Text(title),
-      );
-    });
+    return Observer(
+      builder: (context) {
+        final currentIndex = controller.selectedIndex;
+        return FlatButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+          textColor: currentIndex == index ? Colors.white : Colors.grey.shade800,
+          color: currentIndex == index ? Colors.blue : Colors.transparent,
+          onPressed: () {
+            controller.selectedIndex = index;
+          },
+          child: Text(title),
+        );
+      },
+    );
   }
 }

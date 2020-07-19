@@ -8,6 +8,7 @@ import '../../provider/provider.dart';
 import '../../reactive/actions.dart';
 import '../../reactive/observer.dart';
 import '../studio_controller.dart';
+import 'studio_app_features/device_preview/device_preview_wrapper.dart';
 import 'studio_app_menu.dart';
 
 class StudioApp extends StatelessWidget {
@@ -29,58 +30,67 @@ class StudioApp extends StatelessWidget {
           }
           return Stack(
             children: [
-              Observer(() {
-                final controller = context.get<StudioController>();
-                return AnimatedPositioned(
-                  duration: controller.animationDuration,
-                  top: 0,
-                  left: controller.appMenuOpen ? 0 : -80,
-                  bottom: 0,
-                  width: controller.appMenuWidth,
-                  child: Row(children: [
-                    Expanded(child: StudioAppMenu()),
-                    GestureDetector(
-                      dragStartBehavior: DragStartBehavior.down,
-                      onPanUpdate: (details) {
-                        runInAction(() {
-                          controller.animationDuration = 0.milliseconds;
-                          controller.appMenuDraggingWidth = controller.appMenuDraggingWidth + details.delta.dx;
-                          controller.appMenuWidth =
-                              min(max(400, controller.appMenuDraggingWidth), constraints.maxWidth - 200);
-                        });
-                      },
-                      onPanEnd: (details) {
-                        controller.appMenuDraggingWidth = controller.appMenuWidth;
-                      },
-                      onPanCancel: () {
-                        controller.appMenuDraggingWidth = controller.appMenuWidth;
-                      },
-                      onDoubleTap: () {
-                        runInAction(() {
-                          controller.animationDuration = 200.milliseconds;
-                          controller.appMenuWidth = controller.appMenuDraggingWidth = 400;
-                        });
-                      },
-                      child: Container(
-                        color: Colors.black38,
-                        width: 12,
+              Observer(
+                builder: (context) {
+                  final controller = context.get<StudioController>();
+                  return AnimatedPositioned(
+                    duration: controller.animationDuration,
+                    top: 0,
+                    left: controller.appMenuOpen ? 0 : -80,
+                    bottom: 0,
+                    width: controller.appMenuWidth,
+                    child: Row(children: [
+                      Expanded(child: StudioAppMenu()),
+                      GestureDetector(
+                        dragStartBehavior: DragStartBehavior.down,
+                        onPanUpdate: (details) {
+                          runInAction(() {
+                            controller.animationDuration = 0.milliseconds;
+                            controller.appMenuDraggingWidth = controller.appMenuDraggingWidth + details.delta.dx;
+                            controller.appMenuWidth =
+                                min(max(400, controller.appMenuDraggingWidth), constraints.maxWidth - 200);
+                          });
+                        },
+                        onPanEnd: (details) {
+                          controller.appMenuDraggingWidth = controller.appMenuWidth;
+                        },
+                        onPanCancel: () {
+                          controller.appMenuDraggingWidth = controller.appMenuWidth;
+                        },
+                        onDoubleTap: () {
+                          runInAction(() {
+                            controller.animationDuration = 200.milliseconds;
+                            controller.appMenuWidth = controller.appMenuDraggingWidth = 400;
+                          });
+                        },
+                        child: Container(
+                          color: Colors.black38,
+                          width: 12,
+                        ),
+                      ),
+                    ]),
+                  );
+                },
+              ),
+              Observer(
+                builder: (context) {
+                  final controller = context.get<StudioController>();
+                  final appMenuWidth = controller.appMenuWidth;
+                  return AnimatedPositioned(
+                    duration: controller.animationDuration,
+                    top: 0,
+                    left: controller.appMenuOpen ? appMenuWidth : 0.0,
+                    bottom: 0,
+                    right: 0,
+                    child: DevicePreviewWrapper(
+                      child: ClipRect(
+                        key: context.get<StudioController>().appKey,
+                        child: app,
                       ),
                     ),
-                  ]),
-                );
-              }),
-              Observer(() {
-                final controller = context.get<StudioController>();
-                final appMenuWidth = controller.appMenuWidth;
-                return AnimatedPositioned(
-                  duration: controller.animationDuration,
-                  top: 0,
-                  left: controller.appMenuOpen ? appMenuWidth : 0.0,
-                  bottom: 0,
-                  right: 0,
-                  child: ClipRect(child: app),
-                );
-              }),
+                  );
+                },
+              ),
             ],
           );
         },

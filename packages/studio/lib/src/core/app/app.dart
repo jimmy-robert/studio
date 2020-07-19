@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studio/src/core/reactive/observer.dart';
 
 import '../../widgets/init_widget.dart';
 import '../../widgets/wrapper.dart';
@@ -61,8 +62,8 @@ class _AppState extends State<App> {
                         initialRoute: '/',
                         routes: {'/': widget.build},
                         builder: (context, child) {
-                          child = ThemeBuilder(child: child);
                           child = Wrapper(builder: widget.wrapApp, child: child);
+                          child = ThemeBuilder(child: child);
                           return child;
                         },
                       ),
