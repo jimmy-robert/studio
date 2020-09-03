@@ -1,11 +1,4 @@
 {
   "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Studio - Example",
-      "program": "packages/example/lib/main.dart",
-      "request": "launch",
-      "type": "dart"
-    }
-  ]
+  "configurations": []
 }
