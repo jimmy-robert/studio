@@ -16,6 +16,7 @@ dependencies:
   provider: ^4.3.2+1
   mobx: ^1.2.1+2
   flutter_mobx: ^1.1.0+2
+  dio: ^3.0.10
   material_design_icons_flutter: ^4.0.5555
   font_awesome_flutter: ^8.8.1
   circular_reveal_animation: ^1.1.5

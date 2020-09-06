@@ -7,6 +7,7 @@ export 'src/core/app/app_controller.dart';
 export 'src/core/injection/module.dart';
 export 'src/core/injection/provider.dart';
 export 'src/core/lifecycle/lifecycle.dart';
+export 'src/core/network/network.dart';
 export 'src/core/reactive/rx.dart';
 export 'src/core/serializer/serializer.dart';
 export 'src/core/theme/platform_controller.dart';

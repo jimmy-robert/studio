@@ -4,6 +4,8 @@ import '../../widgets/init_widget.dart';
 import '../../widgets/wrapper.dart';
 import '../injection/module.dart';
 import '../injection/provider.dart';
+import '../network/http_service.dart';
+import '../serializer/serializer.dart';
 import '../theme/platform_controller.dart';
 import '../theme/theme_builder.dart';
 import '../theme/theme_controller.dart';
@@ -38,22 +40,26 @@ class _AppState extends State<App> {
       child: Wrapper(
         builder: widget.wrapAppController,
         child: AppControllerWidget(
-          child: Provider(
-            () => Module(),
+          child: ModuleBuilder(
+            builder: (context) {
+              // Default module
+              return Module()
+                ..add(Provider(() => HttpService()))
+                ..add(Provider(() => Serializer()))
+                ..add(Provider(() => ThemeController()))
+                ..add(Provider(() => PlatformController()));
+            },
             child: Provider(
-              () => ThemeController(),
-              child: Provider(
-                () => PlatformController(),
-                child: InitWidget(
-                  onInit: widget.onCreate,
-                  child: ModuleBuilder(
-                    builder: (context) => Module()..addModule(context.resolve<Module>()),
-                    child: InitWidget(
-                      onInit: widget.onReady,
-                      child: _App(
-                        builder: widget.build,
-                        wrapApp: widget.wrapApp,
-                      ),
+              () => Module(),
+              child: InitWidget(
+                onInit: widget.onCreate,
+                child: ModuleBuilder(
+                  builder: (context) => Module()..addModule(context.resolve<Module>()),
+                  child: InitWidget(
+                    onInit: widget.onReady,
+                    child: _App(
+                      builder: widget.build,
+                      wrapApp: widget.wrapApp,
                     ),
                   ),
                 ),
