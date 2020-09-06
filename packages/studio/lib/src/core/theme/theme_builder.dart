@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:studio/src/core/theme/platform_controller.dart';
-import '../reactive/rx.dart';
 
 import '../injection/provider.dart';
+import '../reactive/rx.dart';
+import 'platform_controller.dart';
 import 'theme_controller.dart';
 
 class ThemeBuilder extends StatelessWidget {
@@ -14,8 +14,8 @@ class ThemeBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Rx(
       builder: (context) {
-        final themeController = context.get<ThemeController>();
-        final platformController = context.get<PlatformController>();
+        final themeController = context.resolve<ThemeController>();
+        final platformController = context.resolve<PlatformController>();
 
         var theme = Theme.of(context, shadowThemeOnly: true) ?? ThemeData.fallback();
         final platform = platformController.platform.value ?? theme.platform;

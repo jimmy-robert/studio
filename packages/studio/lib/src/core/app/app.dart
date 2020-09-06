@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:studio/studio.dart';
 
 import '../../widgets/init_widget.dart';
 import '../../widgets/wrapper.dart';
 import '../injection/module.dart';
 import '../injection/provider.dart';
+import '../theme/platform_controller.dart';
 import '../theme/theme_builder.dart';
 import '../theme/theme_controller.dart';
 import 'app_controller.dart';
@@ -47,7 +47,7 @@ class _AppState extends State<App> {
                 child: InitWidget(
                   onInit: widget.onCreate,
                   child: ModuleBuilder(
-                    builder: (context) => Module()..addModule(context.get<Module>()),
+                    builder: (context) => Module()..addModule(context.resolve<Module>()),
                     child: InitWidget(
                       onInit: widget.onReady,
                       child: _App(
@@ -79,7 +79,7 @@ class _App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      navigatorKey: context.get<AppController>().navigatorKey,
+      navigatorKey: context.resolve<AppController>().navigatorKey,
       initialRoute: '/',
       routes: {'/': builder},
       builder: (context, child) {

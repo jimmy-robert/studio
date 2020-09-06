@@ -143,7 +143,7 @@ class _Provider<T> {
 }
 
 extension ContextProviderExtension on BuildContext {
-  T get<T>({bool allowNull = true}) {
+  T resolve<T>({bool allowNull = true}) {
     return Provider.of<T>(this, allowNull: allowNull);
   }
 }
@@ -154,5 +154,5 @@ class _ContextResolver with Resolver {
   const _ContextResolver(this.context);
 
   @override
-  T get<T>({bool allowNull = true}) => context.get(allowNull: allowNull);
+  T resolve<T>({bool allowNull = true}) => context.resolve(allowNull: allowNull);
 }
