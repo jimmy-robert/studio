@@ -1,52 +1,191 @@
 import 'package:flutter/foundation.dart';
 
+import '../../utils/type.dart';
 import '../injection/resolver.dart';
 import '../lifecycle/lifecycle.dart';
+
+final _stringList = typeOf<List<String>>();
+final _intList = typeOf<List<int>>();
+final _doubleList = typeOf<List<double>>();
+final _numList = typeOf<List<num>>();
+final _boolList = typeOf<List<bool>>();
+final _stringMap = typeOf<Map<String, String>>();
+final _intMap = typeOf<Map<String, int>>();
+final _doubleMap = typeOf<Map<String, double>>();
+final _numMap = typeOf<Map<String, num>>();
+final _boolMap = typeOf<Map<String, bool>>();
+
+final _primitiveTypes = {
+  String,
+  int,
+  double,
+  num,
+  bool,
+  _stringList,
+  _intList,
+  _doubleList,
+  _numList,
+  _boolList,
+  _stringMap,
+  _intMap,
+  _doubleMap,
+  _numMap,
+  _boolMap,
+};
 
 class Serializer {
   final _serializers = <Type, TypeSerializer>{};
 
-  bool canSerialize<T>() => _serializers.containsKey(T);
+  final _listSerializers = <Type, TypeSerializer>{};
+  final _listGenerators = <Type, List Function()>{};
+
+  final _mapSerializers = <Type, TypeSerializer>{};
+  final _mapGenerators = <Type, Map<String, dynamic> Function()>{};
+
+  bool canSerialize<T>() {
+    if (_primitiveTypes.contains(T)) return true;
+    if (_serializers.containsKey(T)) return true;
+    if (_listSerializers.containsKey(T)) return true;
+    if (_mapSerializers.containsKey(T)) return true;
+    return false;
+  }
 
   dynamic serialize<T>(T value) {
     if (value == null) return null;
 
-    final serializer = _serializers[T];
-    assert(serializer != null);
+    // Value
 
-    return serializer._serializeType(value);
-  }
+    var serializer = _serializers[T];
+    if (serializer != null) {
+      return serializer._serializeType(value);
+    }
 
-  dynamic serializeList<T>(List<T> values) {
-    if (values == null) return null;
+    // List
 
-    final serializer = _serializers[T];
-    assert(serializer != null);
+    serializer = _listSerializers[T];
+    if (serializer != null) {
+      assert(value is List);
+      final values = value as List;
+      return values.map<dynamic>((dynamic value) => serializer._serializeType(value)).toList();
+    }
 
-    return values.map<dynamic>((value) => serializer._serializeType(value)).toList();
+    // Map
+
+    serializer = _mapSerializers[T];
+    if (serializer != null) {
+      assert(value is Map<String, dynamic>);
+      final values = value as Map<String, dynamic>;
+      return values.map<String, dynamic>((key, dynamic value) {
+        return MapEntry<String, dynamic>(key, serializer._serializeType(value));
+      });
+    }
+
+    return value;
   }
 
   T deserialize<T>(dynamic value) {
     if (value == null) return null;
 
-    final serializer = _serializers[T] as TypeSerializer<T>;
-    assert(serializer != null);
+    // Value
 
-    return serializer._deserializeType(value);
-  }
+    var serializer = _serializers[T];
+    if (serializer != null) {
+      return serializer._deserializeType(value) as T;
+    }
 
-  List<T> deserializeList<T>(dynamic values) {
-    if (values == null) return null;
+    // List
 
-    final serializer = _serializers[T] as TypeSerializer<T>;
-    assert(serializer != null);
+    serializer = _listSerializers[T];
+    if (serializer != null) {
+      assert(value is List);
+      final values = value as List;
+      final result = _listGenerators[T]();
+      for (final dynamic value in values) {
+        result.add(serializer._deserializeType(value));
+      }
+      return result as T;
+    }
 
-    final list = values as List;
-    return list.map((dynamic data) => serializer._deserializeType(data)).toList();
+    // Map
+
+    serializer = _mapSerializers[T];
+    if (serializer != null) {
+      assert(value is Map<String, dynamic>);
+      final values = value as Map<String, dynamic>;
+      final result = _mapGenerators[T]();
+      for (final entry in values.entries) {
+        result[entry.key] = serializer._deserializeType(entry.value);
+      }
+      return result as T;
+    }
+
+    // Primitive lists
+
+    if (T == _stringList) {
+      assert(value is List);
+      return (value as List).cast<String>() as T;
+    }
+    if (T == _boolList) {
+      assert(value is List);
+      return (value as List).cast<bool>() as T;
+    }
+    if (T == _intList) {
+      assert(value is List);
+      return (value as List).cast<int>() as T;
+    }
+    if (T == _doubleList) {
+      assert(value is List);
+      return (value as List).cast<double>() as T;
+    }
+    if (T == _numList) {
+      assert(value is List);
+      return (value as List).cast<num>() as T;
+    }
+
+    // Primitive maps
+
+    if (T == _stringMap) {
+      assert(value is Map<String, dynamic>);
+      return (value as Map<String, dynamic>).map<String, String>((key, dynamic value) {
+        return MapEntry(key, value as String);
+      }) as T;
+    }
+    if (T == _boolMap) {
+      assert(value is Map<String, dynamic>);
+      return (value as Map<String, dynamic>).map<String, bool>((key, dynamic value) {
+        return MapEntry(key, value as bool);
+      }) as T;
+    }
+    if (T == _intMap) {
+      assert(value is Map<String, dynamic>);
+      return (value as Map<String, dynamic>).map<String, int>((key, dynamic value) {
+        return MapEntry(key, value as int);
+      }) as T;
+    }
+    if (T == _doubleMap) {
+      assert(value is Map<String, dynamic>);
+      return (value as Map<String, dynamic>).map<String, double>((key, dynamic value) {
+        return MapEntry(key, value as double);
+      }) as T;
+    }
+    if (T == _numMap) {
+      assert(value is Map<String, dynamic>);
+      return (value as Map<String, dynamic>).map<String, num>((key, dynamic value) {
+        return MapEntry(key, value as num);
+      }) as T;
+    }
+
+    return value as T;
   }
 
   TypeSerializer<T> register<T>() {
-    return _serializers[T] = TypeSerializer<T>._(this);
+    final listType = typeOf<List<T>>();
+    _listGenerators[listType] = () => <T>[];
+
+    final mapType = typeOf<Map<String, T>>();
+    _mapGenerators[mapType] = () => <String, T>{};
+
+    return _serializers[T] = _listSerializers[listType] = _mapSerializers[mapType] = TypeSerializer<T>._(this);
   }
 }
 
@@ -68,25 +207,12 @@ class TypeSerializer<T> {
 
   void create(T Function() create) => _create = create;
 
-  void value<P>({
+  void property<P>({
     @required String key,
     @required P Function(T instance) get,
     @required void Function(T instance, P value) set,
   }) {
-    _properties.add(_PropertyValue<T, P>(
-      serializer: _serializer,
-      key: key,
-      get: get,
-      set: set,
-    ));
-  }
-
-  void list<P>({
-    @required String key,
-    @required List<P> Function(T instance) get,
-    @required void Function(T instance, List<P> value) set,
-  }) {
-    _properties.add(_PropertyList<T, P>(
+    _properties.add(_Property<T, P>(
       serializer: _serializer,
       key: key,
       get: get,
@@ -122,28 +248,20 @@ class TypeSerializer<T> {
   }
 }
 
-abstract class _Property<T, P> {
-  String get key;
-  dynamic serialize(T instance);
-  void deserialize(T instance, dynamic value);
-}
-
-class _PropertyValue<T, P> extends _Property<T, P> {
+class _Property<T, P> {
   final Serializer serializer;
 
-  @override
   final String key;
   final P Function(T instance) get;
   final void Function(T instance, P value) set;
 
-  _PropertyValue({
+  _Property({
     this.serializer,
     this.key,
     this.get,
     this.set,
   });
 
-  @override
   dynamic serialize(T instance) {
     if (instance == null) return null;
 
@@ -152,46 +270,10 @@ class _PropertyValue<T, P> extends _Property<T, P> {
     return value;
   }
 
-  @override
   void deserialize(T instance, dynamic value) {
     if (value == null) return null;
 
     if (serializer.canSerialize<P>()) value = serializer.deserialize<P>(value);
-    try {
-      assert(value is P);
-    } catch (e) {
-      print(e);
-    }
     set(instance, value as P);
-  }
-}
-
-class _PropertyList<T, P> extends _Property<T, List<P>> {
-  final Serializer serializer;
-
-  @override
-  final String key;
-  final List<P> Function(T instance) get;
-  final void Function(T instance, List<P> value) set;
-
-  _PropertyList({
-    this.serializer,
-    this.key,
-    this.get,
-    this.set,
-  });
-
-  @override
-  dynamic serialize(T instance) {
-    final values = get(instance);
-    if (serializer.canSerialize<P>()) return serializer.serializeList<P>(values);
-    return values;
-  }
-
-  @override
-  void deserialize(T instance, dynamic value) {
-    if (serializer.canSerialize<P>()) value = serializer.deserializeList<P>(value);
-    assert(value is List<P>);
-    set(instance, value as List<P>);
   }
 }
