@@ -189,7 +189,27 @@ class Serializer {
   }
 }
 
-class DefaultSerializer extends Serializer with Lifecycle, ProxyResolver {}
+class DefaultSerializer extends Serializer with Lifecycle, ProxyResolver {
+  Serializer _serializer;
+
+  @override
+  void onCreate() {
+    super.onCreate();
+    _serializer = resolve<Serializer>();
+  }
+
+  @override
+  bool canSerialize<T>() => _serializer.canSerialize<T>();
+
+  @override
+  dynamic serialize<T>(T value) => _serializer.serialize<T>(value);
+
+  @override
+  T deserialize<T>(dynamic value) => _serializer.deserialize(value);
+
+  @override
+  TypeSerializer<T> register<T>() => _serializer.register<T>();
+}
 
 class TypeSerializer<T> {
   final Serializer _serializer;
