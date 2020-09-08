@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import '../injection/resolver.dart';
 import '../lifecycle/lifecycle.dart';
 import '../serializer/serializer.dart';
+import 'api_exception.dart';
 import 'http_service.dart';
 
 class Api with Lifecycle, ProxyResolver {
@@ -32,7 +33,7 @@ class Api with Lifecycle, ProxyResolver {
       cancelToken: cancelToken,
       onReceiveProgress: onReceiveProgress,
     );
-    return _serializer.deserialize<T>(response.data);
+    return parseResponse<T>(response);
   }
 
   Future<T> post<T>(
@@ -53,7 +54,7 @@ class Api with Lifecycle, ProxyResolver {
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
     );
-    return _serializer.deserialize<T>(response.data);
+    return parseResponse<T>(response);
   }
 
   Future<T> put<T>(
@@ -74,7 +75,7 @@ class Api with Lifecycle, ProxyResolver {
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
     );
-    return _serializer.deserialize<T>(response.data);
+    return parseResponse<T>(response);
   }
 
   Future<T> head<T>(
@@ -91,7 +92,7 @@ class Api with Lifecycle, ProxyResolver {
       options: options,
       cancelToken: cancelToken,
     );
-    return _serializer.deserialize<T>(response.data);
+    return parseResponse<T>(response);
   }
 
   Future<T> delete<T>(
@@ -108,7 +109,7 @@ class Api with Lifecycle, ProxyResolver {
       options: options,
       cancelToken: cancelToken,
     );
-    return _serializer.deserialize<T>(response.data);
+    return parseResponse<T>(response);
   }
 
   Future<T> patch<T>(
@@ -129,7 +130,7 @@ class Api with Lifecycle, ProxyResolver {
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
     );
-    return _serializer.deserialize<T>(response.data);
+    return parseResponse<T>(response);
   }
 
   Future<Response> download(
@@ -174,6 +175,22 @@ class Api with Lifecycle, ProxyResolver {
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
     );
-    return _serializer.deserialize<T>(response.data);
+    return parseResponse<T>(response);
+  }
+
+  T parseResponse<T>(Response response, {bool Function(Response response) isError}) {
+    isError ??= _isError;
+    if (isError(response)) throw ApiException(response: response);
+    try {
+      final dynamic data = response.data;
+      if (T == String && data is String) return data as T;
+      return _serializer.deserialize<T>(data);
+    } catch (exception) {
+      throw ApiException(source: exception, response: response);
+    }
+  }
+
+  static bool _isError(Response response) {
+    return response == null || response.statusCode >= 400;
   }
 }
