@@ -248,7 +248,6 @@ class TypeSerializer<T> {
     final result = <String, dynamic>{};
     for (final property in _properties) {
       result[property.key] = property.serialize(instance);
-      ;
     }
     return result;
   }
@@ -286,14 +285,13 @@ class _Property<T, P> {
     if (instance == null) return null;
 
     final value = get(instance);
-    if (serializer.canSerialize<P>()) return serializer.serialize<P>(value);
-    return value;
+    return serializer.serialize<P>(value);
   }
 
   void deserialize(T instance, dynamic value) {
     if (value == null) return null;
 
-    if (serializer.canSerialize<P>()) value = serializer.deserialize<P>(value);
+    if (value is! P) value = serializer.deserialize<P>(value);
     set(instance, value as P);
   }
 }
