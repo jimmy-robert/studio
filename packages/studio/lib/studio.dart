@@ -1,12 +1,15 @@
 export 'dart:async';
 
+export 'package:gap/gap.dart';
 export 'package:intl/intl.dart' hide TextDirection;
 
 export 'src/core/app/app.dart';
 export 'src/core/app/app_controller.dart';
 export 'src/core/controller/controller.dart';
+export 'src/core/controller/controller_widget.dart';
 export 'src/core/injection/module.dart';
 export 'src/core/injection/provider.dart';
+export 'src/core/injection/resolver.dart';
 export 'src/core/lifecycle/lifecycle.dart';
 export 'src/core/network/network.dart';
 export 'src/core/reactive/rx.dart';
