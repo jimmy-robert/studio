@@ -191,6 +191,6 @@ class Api with Lifecycle, ProxyResolver {
   }
 
   static bool _isError(Response response) {
-    return response == null || response.statusCode >= 400;
+    return response?.statusCode == null || response.statusCode >= 400;
   }
 }
