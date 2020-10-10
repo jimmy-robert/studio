@@ -12,7 +12,7 @@ class ThemeBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Rx(
+    return Rx.builder(
       builder: (context) {
         final themeController = context.resolve<ThemeController>();
         final platformController = context.resolve<PlatformController>();

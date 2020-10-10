@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart' as provider;
 
-import '../lifecycle/lifecycle.dart';
+import 'injection.dart';
 import 'resolver.dart';
 
 class Provider<T> extends StatelessWidget {
@@ -35,16 +35,20 @@ class Provider<T> extends StatelessWidget {
 
         final value = _provider.value = _provider.create();
 
-        if (value is ProxyResolver) value.resolver = _ContextResolver(context);
-        if (value is Lifecycle) value.onCreate();
+        if (value is Injection) {
+          value.resolver = _ContextResolver(context);
+          value.onCreate();
+        }
 
         return _provider;
       },
       dispose: (context, provider) {
         final value = provider.value;
 
-        if (value is Lifecycle) value.onDispose();
-        if (value is ProxyResolver) value.resolver = null;
+        if (value is Injection) {
+          value.onDispose();
+          value.resolver = null;
+        }
 
         provider.value = null;
         provider.context = null;
@@ -103,16 +107,20 @@ class _ProviderWithContext<T> extends Provider<T> {
         );
 
         final value = _provider.value = contextCreate(context);
-        if (value is ProxyResolver) value.resolver = _ContextResolver(context);
-        if (value is Lifecycle) value.onCreate();
+        if (value is Injection) {
+          value.resolver = _ContextResolver(context);
+          value.onCreate();
+        }
 
         return _provider;
       },
       dispose: (context, provider) {
         final value = provider.value;
 
-        if (value is Lifecycle) value.onDispose();
-        if (value is ProxyResolver) value.resolver = null;
+        if (value is Injection) {
+          value.onDispose();
+          value.resolver = null;
+        }
 
         provider.value = null;
         provider.context = null;

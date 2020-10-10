@@ -1,10 +1,9 @@
 import 'package:dio/dio.dart';
 
-import '../injection/resolver.dart';
-import '../lifecycle/lifecycle.dart';
+import '../injection/injection.dart';
 import 'http_middleware.dart';
 
-class HttpService with Lifecycle, ProxyResolver {
+class HttpService with Injection {
   final _dio = Dio();
 
   BaseOptions get options => _dio.options;

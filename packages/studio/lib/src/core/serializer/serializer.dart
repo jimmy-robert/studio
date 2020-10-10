@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:studio/src/core/injection/injection.dart';
 
 import '../../utils/type.dart';
-import '../injection/resolver.dart';
-import '../lifecycle/lifecycle.dart';
 
 final _stringList = typeOf<List<String>>();
 final _intList = typeOf<List<int>>();
@@ -189,7 +188,7 @@ class Serializer {
   }
 }
 
-class DefaultSerializer extends Serializer with Lifecycle, ProxyResolver {
+class DefaultSerializer extends Serializer with Injection {
   Serializer _serializer;
 
   @override

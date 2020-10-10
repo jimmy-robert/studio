@@ -1,12 +1,11 @@
 import 'package:dio/dio.dart';
 
-import '../injection/resolver.dart';
-import '../lifecycle/lifecycle.dart';
+import '../injection/injection.dart';
 import '../serializer/serializer.dart';
 import 'api_exception.dart';
 import 'http_service.dart';
 
-class Api with Lifecycle, ProxyResolver {
+class Api with Injection {
   HttpService _httpService;
   Serializer _serializer;
 

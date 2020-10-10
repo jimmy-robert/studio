@@ -35,7 +35,7 @@ class _ControllerWidgetElement<T extends Controller> extends ComponentElement {
   }
 
   @override
-  void update(StatelessWidget newWidget) {
+  void update(Widget newWidget) {
     super.update(newWidget);
     markNeedsBuild();
   }

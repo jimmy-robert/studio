@@ -22,6 +22,7 @@ dependencies:
   circular_reveal_animation: ^1.1.5
   uri: ^0.11.3+1
   gap: ^1.2.0
+  back_button_interceptor: ^4.3.1
 
 dev_dependencies:
   flutter_test:

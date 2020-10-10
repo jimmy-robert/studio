@@ -5,7 +5,7 @@ import 'package:mobx/mobx.dart' as mobx;
 class Rx extends StatelessWidget {
   final WidgetBuilder builder;
 
-  const Rx({
+  const Rx.builder({
     Key key,
     @required this.builder,
   }) : super(key: key);
