@@ -1,6 +1,20 @@
 export 'dart:async';
 
 export 'package:back_button_interceptor/back_button_interceptor.dart';
+export 'package:dio/dio.dart'
+    show
+        ResponseBody,
+        RedirectRecord,
+        Response,
+        ProgressCallback,
+        BaseOptions,
+        Options,
+        RequestOptions,
+        CancelToken,
+        ResponseDecoder,
+        RequestEncoder,
+        ResponseType,
+        ValidateStatus;
 export 'package:flutter/cupertino.dart' hide RefreshCallback, Router, Route;
 export 'package:flutter/material.dart' hide Router, Route;
 export 'package:gap/gap.dart';

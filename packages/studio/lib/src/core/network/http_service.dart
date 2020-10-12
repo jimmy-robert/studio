@@ -1,3 +1,4 @@
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 
 import '../injection/injection.dart';
@@ -14,6 +15,7 @@ class HttpService with Injection {
 
   @override
   void onCreate() {
+    _dio.httpClientAdapter = _HttpClientAdapter(onResponseBody: onResponseBody);
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (request) async {
         for (final middleware in _middlewares.reversed) {
@@ -50,6 +52,8 @@ class HttpService with Injection {
   void onDispose() {
     _dio.close(force: true);
   }
+
+  void onResponseBody(ResponseBody responseBody) {}
 
   // == Dio methods proxies ==
 
@@ -339,5 +343,18 @@ class HttpService with Injection {
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
     );
+  }
+}
+
+class _HttpClientAdapter extends DefaultHttpClientAdapter {
+  final void Function(ResponseBody) onResponseBody;
+
+  _HttpClientAdapter({this.onResponseBody});
+
+  @override
+  Future<ResponseBody> fetch(RequestOptions options, Stream<List<int>> requestStream, Future cancelFuture) async {
+    final responseBody = await super.fetch(options, requestStream, cancelFuture);
+    onResponseBody(responseBody);
+    return responseBody;
   }
 }
