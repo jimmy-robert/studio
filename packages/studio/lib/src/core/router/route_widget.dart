@@ -13,8 +13,8 @@ class RouteWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Provider<RouterBackController>(
       () => RouterBackController(),
-      child: Provider<Route>.value(route, child: route.builder()),
       lazy: false,
+      child: Provider<Route>.value(route, child: route.builder()),
     );
   }
 }

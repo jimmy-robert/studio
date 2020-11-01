@@ -7,7 +7,7 @@ import 'http_service.dart';
 
 class Api with Injection {
   HttpService _httpService;
-  Serializer _serializer;
+  DefaultSerializer _serializer;
 
   HttpService get http => _httpService;
 
@@ -15,7 +15,7 @@ class Api with Injection {
   void onCreate() {
     super.onCreate();
     _httpService = resolve<HttpService>();
-    _serializer = resolve<Serializer>();
+    _serializer = resolve<DefaultSerializer>();
   }
 
   Future<T> get<T>(

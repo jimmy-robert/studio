@@ -23,6 +23,7 @@ dependencies:
   uri: ^0.11.3+1
   gap: ^1.2.0
   back_button_interceptor: ^4.3.1
+  path_provider: ^1.6.18
 
 dev_dependencies:
   flutter_test:

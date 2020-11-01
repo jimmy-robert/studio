@@ -7,9 +7,12 @@ import 'route_widget.dart';
 import 'router_history.dart';
 import 'routes.dart';
 
+final _expando = Expando<_RouterState>();
+
 class Router<T extends Routes> extends StatefulWidget {
+  _RouterState<T> get _state => _expando[this] as _RouterState<T>;
+
   final String initialRoute;
-  final _stateHolder = _StateHolder<T>();
   final bool _enabled;
 
   Router({Key key, this.initialRoute, bool enabled})
@@ -19,10 +22,10 @@ class Router<T extends Routes> extends StatefulWidget {
   @override
   _RouterState<T> createState() => _RouterState<T>();
 
-  bool get enabled => _stateHolder.state._enabled;
-  set enabled(bool value) => _stateHolder.state._enabled;
+  bool get enabled => _state._enabled;
+  set enabled(bool value) => _state._enabled;
 
-  Route get currentRoute => _stateHolder.state.currentRoute;
+  Route get currentRoute => _state.currentRoute;
 
   Future<U> push<U extends Object>(
     dynamic route, {
@@ -34,7 +37,7 @@ class Router<T extends Routes> extends StatefulWidget {
     bool modal,
     Map<String, Object> extras,
   }) {
-    return _stateHolder.state.push<U>(
+    return _state.push<U>(
       route,
       clear: clear,
       replace: replace,
@@ -51,36 +54,36 @@ class Router<T extends Routes> extends StatefulWidget {
     bool toRoot = false,
     RoutePredicate until,
   }) {
-    return _stateHolder.state.pop(
+    return _state.pop(
       result: result,
       toRoot: toRoot,
       until: until,
     );
   }
 
-  bool canPop() => _stateHolder.state.canPop();
+  bool canPop() => _state.canPop();
 
-  Future<bool> maybePop({dynamic result}) => _stateHolder.state.maybePop(result: result);
+  Future<bool> maybePop({dynamic result}) => _state.maybePop(result: result);
 
   void replace<U>({
     @required material.Route<dynamic> oldRoute,
     @required material.Route<U> newRoute,
   }) {
-    _stateHolder.state.replace(oldRoute: oldRoute, newRoute: newRoute);
+    _state.replace(oldRoute: oldRoute, newRoute: newRoute);
   }
 
   void replaceBelow<U>({
     @required material.Route<dynamic> anchorRoute,
     @required material.Route<U> newRoute,
   }) {
-    _stateHolder.state.replaceBelow(anchorRoute: anchorRoute, newRoute: newRoute);
+    _state.replaceBelow(anchorRoute: anchorRoute, newRoute: newRoute);
   }
 
   Future<U> showDialog<U>({
     @required WidgetBuilder builder,
     bool barrierDismissible = true,
   }) {
-    return _stateHolder.state.showDialog(
+    return _state.showDialog(
       builder: builder,
       barrierDismissible: barrierDismissible,
     );
@@ -109,15 +112,9 @@ class _RouterState<T extends Routes> extends State<Router<T>> {
   void initState() {
     super.initState();
     _initialRouter = widget;
-    _initialRouter._stateHolder.state = this;
-    _enabled = widget._enabled;
-  }
+    _expando[_initialRouter] = this;
 
-  @override
-  void dispose() {
-    _initialRouter._stateHolder.state = null;
-    _initialRouter = null;
-    super.dispose();
+    _enabled = _initialRouter._enabled;
   }
 
   @override
@@ -295,10 +292,6 @@ class _RouterState<T extends Routes> extends State<Router<T>> {
     );
     return _navigatorKey.currentState.push<U>(route);
   }
-}
-
-class _StateHolder<T extends Routes> {
-  _RouterState<T> state;
 }
 
 // Dialog

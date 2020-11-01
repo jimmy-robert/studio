@@ -4,7 +4,7 @@ import 'dart:io';
 import '../serializer/serializer.dart';
 
 class Store<T> {
-  final Serializer serializer;
+  final DefaultSerializer serializer;
   final String name;
 
   T value;
