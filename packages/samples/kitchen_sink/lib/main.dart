@@ -8,20 +8,20 @@ void main() {
 
 class MyApp extends App {
   @override
-  void onCreate(BuildContext context) {
-    super.onCreate(context);
+  void onCreate() {
+    super.onCreate();
 
-    context.get<Module>().addAll([
+    resolve<Module>().addAll([
       Provider<CounterController>(() => CounterController()),
     ]);
   }
 
   @override
-  void onReady(BuildContext context) {
-    super.onReady(context);
+  void onReady() {
+    super.onReady();
 
     Rx.run(() {
-      final theme = context.get<ThemeController>();
+      final theme = resolve<ThemeController>();
       theme.light.value = ThemeData.light();
       theme.dark.value = ThemeData.dark();
     });
@@ -42,7 +42,7 @@ class CounterController {
 class CounterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final controller = context.get<CounterController>();
+    final controller = context.resolve<CounterController>();
     return Scaffold(
       appBar: AppBar(
         title: Text('Counter'),
@@ -54,7 +54,7 @@ class CounterWidget extends StatelessWidget {
             Text(
               'You have pushed the button this many times:',
             ),
-            Rx(
+            Rx.builder(
               builder: (context) {
                 final count = controller.count.value;
                 return Text(
