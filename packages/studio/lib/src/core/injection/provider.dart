@@ -79,7 +79,7 @@ class _ProviderValue<T> extends Provider<T> {
 
   @override
   Widget build(BuildContext context) {
-    final _provider = _Provider<T>(create: null, context: null, factory: false, lazy: false);
+    final _provider = _Provider<T>(create: null, context: null, lazy: false);
     _provider.value = value;
     return provider.Provider<_Provider<T>>.value(value: _provider, child: child);
   }
@@ -103,7 +103,6 @@ class _ProviderWithContext<T> extends Provider<T> {
           context: context,
           create: () => contextCreate(context),
           lazy: lazy,
-          factory: false,
         );
 
         final value = _provider.value = contextCreate(context);
@@ -145,9 +144,7 @@ class _Provider<T> {
 
   final bool lazy;
 
-  final bool factory;
-
-  _Provider({this.context, this.create, this.lazy, this.factory});
+  _Provider({this.context, this.create, this.lazy});
 }
 
 extension ContextProviderExtension on BuildContext {

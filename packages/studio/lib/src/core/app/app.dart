@@ -74,7 +74,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MediaQuery(
-      data: MediaQuery.of(context, nullOk: true) ?? MediaQueryData.fromWindow(WidgetsBinding.instance.window),
+      data: MediaQuery.maybeOf(context) ?? MediaQueryData.fromWindow(WidgetsBinding.instance.window),
       child: Provider<App>.value(
         _initialWidget,
         child: RerunWidget(
