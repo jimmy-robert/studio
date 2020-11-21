@@ -276,7 +276,7 @@ class _RouterState<T extends Routes> extends State<Router<T>> {
     @required WidgetBuilder builder,
     bool barrierDismissible = true,
   }) {
-    final theme = Theme.of(context, shadowThemeOnly: true);
+    final theme = Theme.of(context);
     final route = _DialogRoute<U>(
       pageBuilder: (buildContext, animation, secondaryAnimation) {
         final child = Builder(builder: builder);

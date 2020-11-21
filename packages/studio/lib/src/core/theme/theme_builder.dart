@@ -17,7 +17,7 @@ class ThemeBuilder extends StatelessWidget {
         final themeController = context.resolve<ThemeController>();
         final platformController = context.resolve<PlatformController>();
 
-        var theme = Theme.of(context, shadowThemeOnly: true) ?? ThemeData.fallback();
+        var theme = Theme.of(context) ?? ThemeData.fallback();
         final platform = platformController.platform.value ?? theme.platform;
         final dark = themeController.dark.value;
         final light = themeController.light.value;
