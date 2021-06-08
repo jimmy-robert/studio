@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 export 'package:dio/dio.dart' show FormData, MultipartFile;
+export 'package:flutter/material.dart';
 export 'package:http_parser/http_parser.dart' show MediaType;
 export 'package:studio/src/core/app/app.dart';
 export 'package:studio/src/core/dependencies/dependency.dart';
