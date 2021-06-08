@@ -1,27 +1,23 @@
 PODS:
-  - FlutterMacOS (1.0.0)
-  - path_provider (0.0.1)
-  - path_provider_macos (0.0.1):
+  - FlutterMacOS (2.0.0)
+  - studio (0.0.1):
     - FlutterMacOS
 
 DEPENDENCIES:
-  - FlutterMacOS (from `Flutter/ephemeral/.symlinks/flutter/darwin-x64`)
-  - path_provider (from `Flutter/ephemeral/.symlinks/plugins/path_provider/macos`)
-  - path_provider_macos (from `Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos`)
+  - studio (from `Flutter/ephemeral/.symlinks/plugins/studio/macos`)
+
+SPEC REPOS:
+  trunk:
+    - FlutterMacOS
 
 EXTERNAL SOURCES:
-  FlutterMacOS:
-    :path: Flutter/ephemeral/.symlinks/flutter/darwin-x64
-  path_provider:
-    :path: Flutter/ephemeral/.symlinks/plugins/path_provider/macos
-  path_provider_macos:
-    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos
+  studio:
+    :path: Flutter/ephemeral/.symlinks/plugins/studio/macos
 
 SPEC CHECKSUMS:
-  FlutterMacOS: 15bea8a44d2fa024068daa0140371c020b4b6ff9
-  path_provider: e0848572d1d38b9a7dd099e79cf83f5b7e2cde9f
-  path_provider_macos: a0a3fd666cb7cd0448e936fb4abad4052961002b
+  FlutterMacOS: 2f1b456c4d9436c4d4d13919bd3be8ef03ba6322
+  studio: 02ff86fd93059e1679ee9ab54abf035b0ce0ac37
 
 PODFILE CHECKSUM: d8ba9b3e9e93c62c74a660b46c6fcb09f03991a7
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.1
